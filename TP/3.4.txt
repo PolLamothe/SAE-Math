@@ -1,0 +1,8 @@
+Les tuples et les sets:
+
+Les tuples et les sets, une fois qu'ils ont étés définis, ne peuvent plus être modifié.
+
+Donc les seuls actions executables sur ces derniers sont des actions de lecture et non d'écriture.
+
+La différence entre ces deux est que les tuples sont ordonnés, il faut les voir commes des arrays mais inéditable
+les sets eux ne sont pas ordonnés, ils n'ont pas d'index et d'ordre
