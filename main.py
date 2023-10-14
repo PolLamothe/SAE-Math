@@ -42,7 +42,6 @@ def determine_valuations(list_var):
             varIndex.append(i)
     for i in range(0,len(list_var)):
         if func.isInArray(varIndex,i):
-            print(result)
             temp2 = []
             switch = True
             if len(result) == 0:
@@ -59,7 +58,23 @@ def determine_valuations(list_var):
                         temp2.append(current)
                         switch = not switch
             result = temp2
-    return result
+    if len(result) == 0:
+        temp4 = []
+        temp4.append(list_var)
+        return temp4
+    temp3 = []
+    for i in result:
+        if func.isInArray(i,True):
+            temp3.append(i)
+    return temp3
+
+def resol_sat_force_brute(formule,list_var):
+    variation = determine_valuations(list_var)
+    for i in variation:
+        print(i)
+        if evaluer_cnf(formule,i):
+            return True
+    return False
 
 import unittest
 
@@ -81,11 +96,23 @@ class TestEvaluerCNF(unittest.TestCase):
 
 class TestEvaluerValuation(unittest.TestCase):
     def test_Simple(self):
-        self.assertEquals(determine_valuations([None,None]),[[True,True],[True,False],[False,True],[False,False]])
+        self.assertEquals(determine_valuations([None,None]),[[True,True],[True,False],[False,True]])
     def test_complique(self):
-        self.assertEquals(determine_valuations([None,None,None]),[[True,True,True],[True,True,False],[True,False,True],[True,False,False],[False,True,True],[False,True,False],[False,False,True],[False,False,False]])
+        self.assertEquals(determine_valuations([None,None,None]),[[True,True,True],[True,True,False],[True,False,True],[True,False,False],[False,True,True],[False,True,False],[False,False,True]])
     def test_Contrainte(self):
         self.assertEquals(determine_valuations([True,None]),[[True,True],[True,False]])
+    def test_Piege(self):
+        self.assertEquals(determine_valuations([True,True]),[[True,True]])
+
+class TestResolvabilité(unittest.TestCase):
+    def test_Simple(self):
+        self.assertTrue(resol_sat_force_brute([[1,2]],[None,None]))
+    def test_Simple2(self):
+        self.assertFalse(resol_sat_force_brute([[1,-2]],[False,True]))
+    def test_Complique(self):
+        self.assertFalse(resol_sat_force_brute([[-1,2],[3,1]],[True,False,False]))
+    def test_Complique2(self):
+        self.assertFalse(resol_sat_force_brute([[1,2],[1,3]],[False,None,False]))
 
 if __name__ == '__main__':
     unittest.main()
