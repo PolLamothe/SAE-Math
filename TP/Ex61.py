@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+
 def inclus(A,B):
     scannedElement = []
     counter = 0

@@ -76,6 +76,23 @@ def resol_sat_force_brute(formule,list_var):
             return True
     return False
 
+def progress(list_var,list_chgmts):
+    result = []
+    for i in range(len(list_var)):
+        if list_var[i] == None:
+            result.append([i,True])
+    return result
+
+def retour(list_var,list_chgmts):
+    for i in range(1,len(list_chgmts)+1):
+        if list_chgmts[len(list_chgmts)-i][1] == True:
+            list_chgmts[len(list_chgmts)-i][1] = False
+            return list_chgmts
+    return list_chgmts
+
+#def resol_parcours_arbre(formule_init,list_var,list_chgmts):
+    
+
 import unittest
 
 class TestEvaluerClause(unittest.TestCase):
@@ -113,6 +130,15 @@ class TestResolvabilité(unittest.TestCase):
         self.assertFalse(resol_sat_force_brute([[-1,2],[3,1]],[True,False,False]))
     def test_Complique2(self):
         self.assertFalse(resol_sat_force_brute([[1,2],[1,3]],[False,None,False]))
+
+class TestProgress(unittest.TestCase):
+    def test_Enonce(self):
+        self.assertEquals(progress([None,True,None],[]),[[0,True],[2,True]])
+
+class TestRetour(unittest.TestCase):
+    def test_Simple(self):
+        print(retour([None,True,None],progress([None,True,None],[])),)
+        self.assertEquals(retour([None,True,None],progress([None,True,None],[])),[[0,True],[2,False]])
 
 if __name__ == '__main__':
     unittest.main()

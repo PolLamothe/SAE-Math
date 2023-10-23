@@ -1,3 +1,5 @@
+import Ex51
+
 def ajout(x,E):
     E.add(x)
     return E
@@ -51,6 +53,38 @@ def diff_sym(A,B):
     return result
 
 import unittest
+
+class Test_Math(unittest.TestCase):
+    def test_MaMethode(self):
+        Es = set({"Pol","Baptiste","Mathieu","Denis"})
+        Em = set({"Pol","Mathieu","Titouan","Theo"})
+        answer = set({})
+        for i in union(Es,Em):
+            if Ex51.membre(i,Es) == False or Ex51.membre(i,Em) == False:
+                answer.add(i)
+        self.assertEquals(answer,set({"Baptiste","Denis","Titouan","Theo"}))
+    
+    def test_MethodeAttiogbe(self):
+        Es = set({"Pol","Baptiste","Mathieu","Denis"})
+        Em = set({"Pol","Mathieu","Titouan","Theo"})
+        answer = set({})
+        for i in union(Es,Em):
+            if Ex51.membre(i,intersection(Es,Em)) == False:
+                answer.add(i)
+        self.assertEquals(answer,set({"Baptiste","Denis","Titouan","Theo"}))
+    
+    def test_LesDeuxEgales(self):
+        Es = set({"Pol","Baptiste","Mathieu","Denis"})
+        Em = set({"Pol","Mathieu","Titouan","Theo"})
+        answerPol = set({})
+        for i in union(Es,Em):
+            if Ex51.membre(i,Es) == False or Ex51.membre(i,Em) == False:
+                answerPol.add(i)
+        answerAttigobe = set({})
+        for i in union(Es,Em):
+            if Ex51.membre(i,intersection(Es,Em)) == False:
+                answerAttigobe.add(i)
+        self.assertEquals(answerPol,answerAttigobe)
 
 class TestUnion(unittest.TestCase):
     def test_bothDifferent(self):

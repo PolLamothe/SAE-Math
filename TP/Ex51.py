@@ -8,6 +8,7 @@ def affiche_col(E):
         print(i)
 
 def membre(x,E):
+    print(x)
     for i in E:
         if(x == i):
             return True
