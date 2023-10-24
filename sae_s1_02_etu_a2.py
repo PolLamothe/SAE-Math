@@ -482,16 +482,19 @@ list_chgmts= [[2, True]]
 cor_form,cor_l1,cor_l2= ([[-2, -5], [-1]],[False, True, False, False, False],[[2, False]])
 test('essai2_retour_simpl_for : ',retour_simpl_for(formule_init,list_var,list_chgmts),(cor_form,cor_l1,cor_l2))
 
+formule_init= [[1, 2, 4, -5], [-1, 2, 3, -4], [-1, -2, -5], [-3, 4, 5], [-2, 3, 4, 5], [-4, 5]] 
+list_var= [True, True, None, None, False] 
+list_chgmts= [[0, True], [1, True], [4, False]] 
+cor_form,cor_l1,cor_l2= ([[3, -4], [-3, 4, 5], [-4, 5]], [True, False, None, None, None], [[0, True], [1, False]])
+test('essai2_retour_simpl_for : ',retour_simpl_for(formule_init,list_var,list_chgmts),(cor_form,cor_l1,cor_l2))
 
 def retour_simpl_for_dpll(formule_init,list_var,list_chgmts,list_sans_retour):
-    '''
-Renvoie : form,l1,l2,l3
-    form : nouvelle formule
-    l1 : nouvelle list_var 
-    l2 : nouvelle list_chgmts
-    l3 : nouvelle list_sans_retour
-'''
-'''
+    for i in list_sans_retour:
+        list_var[i] = None
+        del list_chgmts[i]
+    formule_init,list_var,list_chgmts = retour_simpl_for(formule_init,list_var,list_chgmts)
+    return (formule_init,list_var,list_chgmts,[])
+
 formule_init= [[1, 2, 4, -5], [-1, 2, 3, -4], [-1, -2, -5], [-3, 4, 5], [-2, 3, 4, 5], [-4, 5]] 
 list_var= [True, True, False, True, False] 
 list_chgmts= [[0, True], [1, True], [2, False], [4, False], [3, True]] 
@@ -512,7 +515,6 @@ list_chgmts= [[0, True]]
 list_sans_retour= [0]
 cor_form,cor_l1,cor_l2,cor_l3= ([[3, 1], [1], [-2, 3, -5], [-1, 3], [-4, -3, -2]], [None, None, False, None, True], [], [])
 test('essai3_retour_simpl_for_dpll : ',retour_simpl_for_dpll(formule_init,list_var,list_chgmts,list_sans_retour),(cor_form,cor_l1,cor_l2,cor_l3))
-'''
 
 
 def resol_parcours_arbre(formule_init,list_var,list_chgmts):
