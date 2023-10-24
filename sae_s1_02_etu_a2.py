@@ -466,14 +466,10 @@ test("essai cas 6 retour : ",retour(list_var,list_chgmts),(l1,l2))
 
 
 def retour_simpl_for(formule_init,list_var,list_chgmts):
-    '''
-Renvoie : form,l1,l2
-    form : nouvelle formule
-    l1 : nouvelle list_var 
-    l2 : nouvelle list_chgmts 
-'''
+    list_var,list_chgmts = retour(list_var,list_chgmts)
+    formule = retablir_for(formule_init,list_chgmts)
+    return formule,list_var,list_chgmts
 
-'''
 formule_init= [[-2, 1, -5, -4], [2, 4, -1], [-5, 4], [1, 4, -2], [-4, -2, 5]] 
 list_var= [True, True, False, False, True] 
 list_chgmts= [[0, True], [4, True]]
@@ -485,7 +481,7 @@ list_var= [False, True, True, False, False]
 list_chgmts= [[2, True]]
 cor_form,cor_l1,cor_l2= ([[-2, -5], [-1]],[False, True, False, False, False],[[2, False]])
 test('essai2_retour_simpl_for : ',retour_simpl_for(formule_init,list_var,list_chgmts),(cor_form,cor_l1,cor_l2))
-'''    
+
 
 def retour_simpl_for_dpll(formule_init,list_var,list_chgmts,list_sans_retour):
     '''
