@@ -344,11 +344,49 @@ list_var= [True, False, None, None, None]
 list_chgmts= [[0, True], [1, False]]
 cor_form,cor_l1,cor_l2= ([[4, 5], [-4, 5]],[True, False, True, None, None],[[0, True], [1, False], [2, True]])
 test('essai3_progress_simpl_for : ',progress_simpl_for(formule,list_var,list_chgmts),(cor_form,cor_l1,cor_l2))
-   
 
 def progress_simpl_for_dpll(formule,list_var,list_chgmts,list_sans_retour):
-    
-
+    maping = {"pos":0,"neg":0,"value":0}
+    processed = False
+    for i in range(len(list_var)):
+        if list_var[i] == None:
+            pos = 0
+            neg = 0
+            for x in formule:
+                if func.isInArray(x,i+1):
+                    pos = pos + 1
+                if func.isInArray(x,-(i+1)):
+                    neg = neg + 1
+                if len(x) == 1 and (func.isInArray(x,i+1)or func.isInArray(x,-(i+1))) and not processed:
+                    if func.isInArray(x,i+1):
+                        maping = {"pos":1,"neg":0,"value":i+1}
+                    else:
+                        maping = {"pos":0,"neg":1,"value":i+1}
+                    processed = True
+            if (pos == 0 or neg == 0) and (pos != 0 or neg != 0) and not processed:
+                if pos == 0:
+                    maping = {"pos":0,"neg":1,"value":i+1}
+                else:
+                    maping = {"pos":1,"neg":0,"value":i+1}
+                processed = True
+    if not processed:
+        if formule[0][0] > 0:
+            maping = {"pos":1,"neg":0,"value":formule[0][0]}
+        else:
+            maping = {"pos":0,"neg":1,"value":-(formule[0][0])}
+    if maping["pos"] > maping["neg"]:
+        if processed:
+            list_sans_retour.append(maping["value"]-1)
+        list_chgmts.append([maping["value"]-1,True])
+        list_var[maping["value"]-1] = True
+        formule = init_formule_simpl_for(formule,list_var)
+        return formule,list_var,list_chgmts,list_sans_retour
+    else:
+        list_sans_retour.append(maping["value"]-1)
+        list_chgmts.append([maping["value"]-1,False])
+        list_var[maping["value"]-1] = False
+        formule = init_formule_simpl_for(formule,list_var)
+        return formule,list_var,list_chgmts,list_sans_retour
 
 formule= [[-5], [4, 5], [-4, 5]] 
 list_var= [True, True, False, None, None] 
@@ -358,7 +396,7 @@ cor_for,cor_l1,cor_l2,cor_l3= ([[4], [-4]],[True, True, False, None, False],[[0,
 test('essai1_progress_simpl_for_dpll : ',progress_simpl_for_dpll(formule,list_var,list_chgmts,list_sans_retour),(cor_for,cor_l1,cor_l2,cor_l3))
 
 formule= [[-5,4], [2,4, 5], [-2, 5]]
-list_var= [True, None, None, None, None] 
+list_var= [True, None, None, None, None]
 list_chgmts= [[0, True]] 
 list_sans_retour= [0]
 cor_for,cor_l1,cor_l2,cor_l3= ([[-2,5]],[True, None, None, True, None],[[0, True],[3, True]],[0,3])
@@ -372,14 +410,15 @@ cor_for,cor_l1,cor_l2,cor_l3=([[2, 3, -4], [-2, -5], [-3, 4, 5], [-2, 3, 4, 5], 
 test('essai3_progress_simpl_for_dpll : ',progress_simpl_for_dpll(formule,list_var,list_chgmts,list_sans_retour),(cor_for,cor_l1,cor_l2,cor_l3))
 
 
-def retour(list_var,list_chgmts):
-    '''
-    renvoie :l1,l2 avec :
-    l1 : la liste actualisée des valeurs attribuées aux variables 
-    l2 : la liste actualisée de l'ensemble des changements effectués depuis une formule initiale
-    
-    '''
-'''
+def retour(list_var,list_chgmts):#True -> False/False -> None
+    for i in range(len(list_var)-1,0,-1):
+        valid = False
+        for x in list_chgmts:
+            if x[0] == i:
+                valid = True
+        if (i == None) or valid:
+            
+
 list_var= [True, True, None, None, None]
 list_chgmts= [[0, True], [1, True]]
 l1= [True, False, None, None, None]
@@ -415,7 +454,7 @@ list_chgmts= [[1, False]]
 l1= [True, None, False, True, None]
 l2= []
 test("essai cas 6 retour : ",retour(list_var,list_chgmts),(l1,l2))
-'''
+
 
 def retour_simpl_for(formule_init,list_var,list_chgmts):
     '''
@@ -711,7 +750,3 @@ list_var_grille3=init_list_var(grille3,3)
 boo_3,lili3=ultim_resol_simpl_for_dpll(formul_sudok,list_var_grille3)
 if boo_3:
     afficher_grille(creer_grille_final(lili3,3),3)'''
-
-
-
-
