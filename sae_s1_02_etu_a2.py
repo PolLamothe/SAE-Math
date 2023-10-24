@@ -411,13 +411,22 @@ test('essai3_progress_simpl_for_dpll : ',progress_simpl_for_dpll(formule,list_va
 
 
 def retour(list_var,list_chgmts):#True -> False/False -> None
-    for i in range(len(list_var)-1,0,-1):
+    for i in range(len(list_var)-1,-1,-1):
         valid = False
         for x in list_chgmts:
             if x[0] == i:
                 valid = True
-        if (i == None) or valid:
-            
+        if valid:
+            if list_var[i] == True:
+                for x in range(len(list_chgmts)):
+                    if list_chgmts[x][0] == i:
+                        list_chgmts[x][1] = False
+                list_var[i] = False 
+                return list_var,list_chgmts
+            else:
+                list_var[i] = None
+                list_chgmts.pop()
+    return list_var,list_chgmts
 
 list_var= [True, True, None, None, None]
 list_chgmts= [[0, True], [1, True]]
