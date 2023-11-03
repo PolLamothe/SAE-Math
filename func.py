@@ -10,3 +10,11 @@ def removeFromArray(array,item):
         if i != item:
             result.append(i)
     return result
+
+def decalRight(array,index,value):
+    result = []
+    for i in range(len(array)):
+        if i == index:
+            result.append(value)
+        result.append(array[i])
+    return result
