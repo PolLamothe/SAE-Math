@@ -585,22 +585,35 @@ list_chgmts= [[1, True]]
 cor_resol=(True,[False, True, False, True, False])
 test('essai3_resol_parcours_arbre : ',resol_parcours_arbre(formule_init,list_var,list_chgmts),cor_resol)
 
-def resol_parcours_arbre_simpl_for(formule_init,formule,list_var,list_chgmts):#la même distinction peut être faite entre formule et formule_init
-    '''
-    Renvoie SAT,l1 avec :
-SAT=True ou False
-l1=une liste de valuations rendant la formule vraie ou une liste vide
-''' 
-        #Initialisation du parcours
+def resol_parcours_arbre_simpl_for(formule_init,formule,list_var,list_chgmts):
     if list_chgmts==[]:
         if [] in formule:
             return False,[]
         if formule==[]:
             return True,list_var
-        form,list_var_init,list_chgmts_init=progress_simpl_for(formule,list_var,[])
+        form,list_var_init,list_chgmts_init=progress_simpl_for(formule.copy(),list_var.copy(),[])
         return resol_parcours_arbre_simpl_for(formule_init,form,list_var_init,list_chgmts_init)
-    
-        
+    formuleCounter = 0
+    for i in formule:
+        if len(i) == 0:
+            formuleCounter = formuleCounter +1
+    if formuleCounter == len(formule):
+        return True,list_var
+    advanced1,advanced2,advanced3= progress_simpl_for(formule.copy(),list_var.copy(),list_chgmts.copy())
+    if evaluer_cnf(formule_init,advanced2) != False:
+        return resol_parcours_arbre_simpl_for(formule_init,advanced1,advanced2,advanced3)
+    return1,return2,return3 = retour_simpl_for(formule_init.copy(),advanced2.copy(),advanced3.copy())
+    if evaluer_cnf(formule_init,return2) != False:
+        return resol_parcours_arbre_simpl_for(formule_init,return1,return2,return3)
+    if list_chgmts[len(list_chgmts)-1][1] != False:
+        return1,return2,return3 = retour_simpl_for(formule_init.copy(),list_var,list_chgmts.copy())
+        return resol_parcours_arbre_simpl_for(formule_init.copy(),return1,return2,return3)
+    else:
+        for i in list_chgmts:
+            if i[1] != False:
+                return1,return2,return3 = retour_simpl_for(formule_init.copy(),list_var.copy(),list_chgmts.copy())
+                return resol_parcours_arbre_simpl_for(formule_init,return1,return2,return3)
+        return False,[]
 
 formule_init= [[1, 2, 4, -5], [-1, 2, 3, -4], [-1, -2, -5], [-3, 4, 5], [-2, 3, 4, 5], [-4, 5]] 
 formule= [[2, 3, -4], [-2, -5], [-3, 4, 5], [-2, 3, 4, 5], [-4, 5]] 
