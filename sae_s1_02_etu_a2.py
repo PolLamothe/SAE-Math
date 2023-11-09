@@ -518,7 +518,9 @@ test('essai2_retour_simpl_for : ',retour_simpl_for(formule_init,list_var,list_ch
 def retour_simpl_for_dpll(formule_init,list_var,list_chgmts,list_sans_retour):
     for i in list_sans_retour:
         list_var[i] = None
-        del list_chgmts[i]
+        for x in range(len(list_chgmts)-1):
+            if list_chgmts[x][0] == i:
+                del list_chgmts[x]
     formule_init,list_var,list_chgmts = retour_simpl_for(formule_init,list_var,list_chgmts)
     return (formule_init,list_var,list_chgmts,[])
 
@@ -636,22 +638,42 @@ list_chgmts= [[1, True]]
 cor_resol=(True, [False, True, False, True, False])
 test('essai3_resol_parcours_arbre_simpl_for : ',resol_parcours_arbre_simpl_for(formule_init,formule,list_var,list_chgmts),cor_resol)
 
+formule_init= [[-5, 2, -3, -4], [1, -5], [5, 2], [3, -2, 4], [5, -2, -1]] 
+list_var= [False, True, False, None, None] 
+list_chgmts= [[1, True]]
+cor_resol=(True,[False, True, False, True, False])
+test('essai4_resol_parcours_arbre_simpl_for : ',resol_parcours_arbre_simpl_for(formule_init,formule_init,list_var,list_chgmts),cor_resol)
+
+formule_init= [[1, 4, -5], [-1, -5], [2, -3, 5], [2, -4], [2, 4, 5], [-1, -2], [-1, 2, -3], [-2, 4, -5], [1, -2]] 
+list_var= [True, True, False, True, None] 
+list_chgmts= [[1, True]]
+cor_resol=(False, [])
+test('essai5_resol_parcours_arbre_simpl_for : ',resol_parcours_arbre_simpl_for(formule_init,formule_init,list_var,list_chgmts),cor_resol)
+
 def resol_parcours_arbre_simpl_for_dpll(formule_init,formule,list_var,list_chgmts,list_sans_retour):
-    '''
-    Renvoie SAT,l1 avec :
-SAT=True ou False
-l1=une liste de valuations rendant la formule vraie ou une liste vide
-'''
     #Initialisation du parcours
     if list_chgmts==[]:
         if [] in formule:
             return False,[]
-        if formule==[]:
-            return True,list_var
         form,list_var_init,list_chgmts_init,list_sans_retour_init=progress_simpl_for_dpll(formule,list_var,[],[])
         return resol_parcours_arbre_simpl_for_dpll(formule_init,form,list_var_init,list_chgmts_init,list_sans_retour_init)
+    if formule == []:
+        return True,list_var
+    advanced1,advanced2,advanced3,advanced4 = progress_simpl_for_dpll(formule.copy(),list_var.copy(),list_chgmts.copy(),list_sans_retour.copy())
+    if evaluer_cnf(formule_init,advanced2) != False:
+        return resol_parcours_arbre_simpl_for_dpll(formule_init,advanced1,advanced2,advanced3,advanced4)
+    return1,return2,return3,return4 = retour_simpl_for_dpll(formule_init,advanced2,advanced3,advanced4)
+    if evaluer_cnf(formule_init,return2) != False:
+        if return3 == []:
+            return False,[]
+        return resol_parcours_arbre_simpl_for_dpll(formule_init,return1,return2,return3,return4)
+    else:
+        for i in list_chgmts:
+            if i[1] != False:
+                    return1,return2,return3,return4 = retour_simpl_for_dpll(formule_init,list_var,list_chgmts,list_sans_retour)
+                    return resol_parcours_arbre_simpl_for_dpll(formule_init,return1,return2,return3,return4)
+        return False,[]
 
-'''
 formule_init= [[1, 2, 4, -5], [-1, 2, 3, -4], [-1, -2, -5], [-3, 4, 5], [-2, 3, 4, 5], [-4, 5]] 
 formule= [[2, 3, -4], [-2, -5], [-3, 4, 5], [-2, 3, 4, 5], [-4, 5]] 
 list_var= [True, None, None, None, None] 
@@ -683,8 +705,13 @@ list_chgmts= [[4, True]]
 list_sans_retour=[4]
 cor_resol=(False, [])
 test('essai4_resol_parcours_arbre_simpl_for_dpll : ',resol_parcours_arbre_simpl_for_dpll(formule_init,formule,list_var,list_chgmts,list_sans_retour),cor_resol)
-'''
-        
+
+formule_init= [[1, 4, -5], [-1, -5], [2, -3, 5], [2, -4], [2, 4, 5], [-1, -2], [-1, 2, -3], [-2, 4, -5], [1, -2]] 
+list_var= [True, True, False, True, None] 
+list_chgmts= [[1, True]]
+cor_resol=(False, [])
+test('essai1_resol_parcours_arbre : ',resol_parcours_arbre_simpl_for_dpll(formule_init,init_formule_simpl_for(formule_init,list_var),list_var,list_chgmts,[1]),cor_resol)
+
 def ultim_resol(formule_init,list_var):
     '''
     Renvoie SAT,l1 avec :
