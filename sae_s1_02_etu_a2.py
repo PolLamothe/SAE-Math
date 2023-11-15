@@ -93,20 +93,15 @@ test("essai cas 6 evaluer_clause : ",evaluer_clause(clause6,list_var6),True)
 
 
 def evaluer_cnf(formule,list_var):
-    if len(formule) == 0:
-        return True
-    count = 0
-    noneCount = 0
+    none = False
     for i in formule:
-        if evaluer_clause(i,list_var) == True:
-            count = count+1
-        elif evaluer_clause(i,list_var) == None:
-            noneCount = noneCount+1
-    if count == len(formule):
-        return True
-    if noneCount > 0:
+        if evaluer_clause(i,list_var) == None:
+            none = True
+        if evaluer_clause(i,list_var) == False:
+            return False
+    if none:
         return None
-    return False
+    return True
     
 for1=[[1,2],[2,-3,4],[-1,-2],[-1,-2,-3],[1]]
 list_var_for1_test1=[True,False,False,None]
@@ -117,39 +112,28 @@ list_var_for1_test3=[True,False,True,False]
 test('test3 evaluer_cnf : ',evaluer_cnf(for1,list_var_for1_test3),False)
 
 def determine_valuations(list_var):
-    varIndex = []
     result = []
-    for i in range(len(list_var)):
-        if list_var[i] == None:
-            varIndex.append(i)
-    for i in range(0,len(list_var)):
-        if func.isInArray(varIndex,i):
-            temp2 = []
+    for leNoneKonBaise in range(len(list_var)):
+        if list_var[leNoneKonBaise] == None:
+            temp = []
             switch = True
-            if len(result) == 0:
-                for x in range(2):
-                    temp = copy.copy(list_var)
-                    temp[i] = switch
-                    temp2.append(temp)
+            for nombreBoucle in range(len(result)):
+                for y in range(2):
+                    temp.append(result[nombreBoucle].copy())
+                    temp[len(temp)-1][leNoneKonBaise] = switch
                     switch = not switch
-            else :
-                for x in result:
-                    for y in range(2):
-                        current = copy.copy(x)
-                        current[i] = switch
-                        temp2.append(current)
-                        switch = not switch
-            result = temp2
+            if len(result) == 0:
+                for nombreBoucle in range(2):
+                    result.append(list_var.copy())
+                    result[nombreBoucle][leNoneKonBaise] = switch
+                    switch = not switch
+            else:
+                result = temp
     if len(result) == 0:
-        temp4 = []
-        temp4.append(list_var)
-        return temp4
-    temp3 = []
-    for i in result:
-        temp3.append(i)
-    return temp3
+        return [list_var]
+    return result
     
-
+ 
 list_var1=[True,None,False,None]
 print(test_determine_valuations('res_test_determine_valuations cas 1 : ',list_var1,[[True, True, False, True], [True, False, False, True], [True, True, False, False], [True, False, False, False]]))
 list_var2=[None,False,True,None,True,False]
