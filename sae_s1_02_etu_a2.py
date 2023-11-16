@@ -1,6 +1,7 @@
 import func
 import copy
 import time
+import numpy
 
 #TROIS PETITES FONCTIONS DE TEST UTILISEES PLUS BAS#
 def test(mess,eval,res):
@@ -697,41 +698,35 @@ cor_resol=(False, [])
 test('essai1_resol_parcours_arbre : ',resol_parcours_arbre_simpl_for_dpll(formule_init,init_formule_simpl_for(formule_init,list_var),list_var,list_chgmts,[1]),cor_resol)
 
 def ultim_resol(formule_init,list_var):
-    '''
-    Renvoie SAT,l1 avec :
-SAT=True ou False
-l1=une liste de valuations rendant la formule vraie ou une liste vide
+    start = time.time()
+    return resol_parcours_arbre(formule_init,list_var,[]),time.time()-start
 
-    Affichage possible du temps mis pour la résolution
-'''
+print(ultim_resol([[1,2],[3,-4]],[None,None,None,None]))
 
 def ultim_resol_simpl_for(formule_init,list_var):
-    '''
-    Renvoie SAT,l1 avec :
-SAT=True ou False
-l1=une liste de valuations rendant la formule vraie ou une liste vide
+    start = time.time()
+    return resol_parcours_arbre_simpl_for(formule_init,formule_init,list_var,[]),time.time()-start
 
-    Affichage possible du temps mis pour la résolution
-'''
+print(ultim_resol_simpl_for([[1,2],[3,-4]],[None,None,None,None]))
 
 def ultim_resol_simpl_for_dpll(formule_init,list_var):
-    '''
-    Renvoie SAT,l1 avec :
-SAT=True ou False
-l1=une liste de valuations rendant la formule vraie ou une liste vide
+    start = time.time()
+    return resol_parcours_arbre_simpl_for_dpll(formule_init,formule_init,list_var,[],[]),time.time()-start
 
-    Affichage possible du temps mis pour la résolution
-'''
+print(ultim_resol_simpl_for_dpll([[1,2],[3,-4]],[None,None,None,None]))
 
 def creer_grille_init(list_grille,n):
-    '''Arguments : une liste de listes(contenant les coordonnées à renseigner et le nombre correspondant) et un entier donnant la taille de la grille
-        Renvoie : une liste (list_grille_complete) avec les valeurs qui devront s'afficher dans la grille en la parcourant ligne après ligne de haut en bas et de gauche à droite
-'''
-'''
+    result = []
+    for i in range(n*n*n*n):
+        result.append(0)
+    for i in list_grille:
+        result[i[1]+((i[0]-1)*n*n)-1] = i[2]
+    return result
+
 list_grille3=[[1,3,2],[1,6,5],[2,5,4],[2,8,9],[2,9,3],[3,2,7],[3,9,6],[4,3,1],[4,4,8],[4,8,3],[5,1,7],[5,2,2],[5,5,6],[5,8,8],[5,9,4],[6,2,4],[6,6,2],[6,7,5],[7,1,3],[7,8,1],[8,1,4],[8,2,6],[8,5,7],[9,4,9],[9,7,8]]
 cor_grille3=[0, 0, 2, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 9, 3, 0, 7, 0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 8, 0, 0, 0, 3, 0, 7, 2, 0, 0, 6, 0, 0, 8, 4, 0, 4, 0, 0, 0, 2, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 4, 6, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 8, 0, 0]
 test("essai creer_grille_init : ",creer_grille_init(list_grille3,3),cor_grille3)
-'''
+
 def creer_grille_final(list_var,n):
     '''
     Renvoie : une liste (list_grille_complete) avec les valeurs qui devront s'afficher dans la grille (en fonction des valeurs logiques prises par les variables de list_var) en la parcourant ligne après ligne de haut en bas et de gauche à droite
@@ -761,11 +756,11 @@ def init_list_var(grille,n):
     '''
     Renvoie : une liste list_var initialisant une valuation tenant compte des valeurs non nulles déjà renseignées dans list_grille_complete
 '''
-'''
+
 grille2= [0, 1, 0, 0, 4, 2, 0, 0, 0, 0, 2, 0, 0, 3, 0, 0]
 cor_list_var_grille2= [None, None, None, None, True, False, False, False, None, None, None, None, None, None, None, None, False, False, False, True, False, True, False, False, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, False, True, False, False, None, None, None, None, None, None, None, None, False, False, True, False, None, None, None, None, None, None, None, None]
 test('test_init_list_var : ',init_list_var(grille2,2),cor_list_var_grille2)
-'''
+
 
 
 
